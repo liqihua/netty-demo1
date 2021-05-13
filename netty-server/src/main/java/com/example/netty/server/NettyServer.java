@@ -29,6 +29,7 @@ public class NettyServer {
 
                         @Override
                         protected void initChannel(SocketChannel socketChannel) throws Exception {
+                            System.out.println("有channel建立，hashCode：" + socketChannel.hashCode());
                             socketChannel.pipeline().addLast(new NettyServerHandler());
                         }
                     });

@@ -37,7 +37,32 @@ public class NettyServer {
             System.out.println("服务器已就绪");
 
             ChannelFuture channelFuture = bootstrap.bind(9090).sync();
+            channelFuture.addListener(new ChannelFutureListener() {
+                public void operationComplete(ChannelFuture future) throws Exception {
+                    if(future.isDone()) {
+                        System.out.println("服务器绑定端口完成");
+                    }
+                    if(future.isSuccess()) {
+                        System.out.println("服务器绑定端口成功");
+                    } else {
+                        System.out.println("服务器绑定端口失败");
+                    }
+                }
+            });
+
             ChannelFuture closeFuture = channelFuture.channel().closeFuture().sync();
+            closeFuture.addListener(new ChannelFutureListener() {
+                public void operationComplete(ChannelFuture future) throws Exception {
+                    if(future.isDone()) {
+                        System.out.println("服务器channel关闭完成");
+                    }
+                    if(future.isSuccess()) {
+                        System.out.println("服务器channel关闭成功");
+                    } else {
+                        System.out.println("服务器channel关闭失败");
+                    }
+                }
+            });
 
         } finally {
             bossGroup.shutdownGracefully();

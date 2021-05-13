@@ -2,6 +2,7 @@ package com.example.netty.client;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -33,7 +34,32 @@ public class NettyClient {
                     });
 
             ChannelFuture channelFuture = bootstrap.connect("127.0.0.1",9090);
+            channelFuture.addListener(new ChannelFutureListener() {
+                public void operationComplete(ChannelFuture future) throws Exception {
+                    if(future.isDone()) {
+                        System.out.println("客户端绑定端口完成");
+                    }
+                    if(future.isSuccess()) {
+                        System.out.println("客户端绑定端口成功");
+                    } else {
+                        System.out.println("客户端绑定端口失败");
+                    }
+                }
+            });
+
             ChannelFuture closeFuture = channelFuture.channel().closeFuture().sync();
+            closeFuture.addListener(new ChannelFutureListener() {
+                public void operationComplete(ChannelFuture future) throws Exception {
+                    if(future.isDone()) {
+                        System.out.println("客户端channel关闭完成");
+                    }
+                    if(future.isSuccess()) {
+                        System.out.println("客户端channel关闭成功");
+                    } else {
+                        System.out.println("客户端channel关闭失败");
+                    }
+                }
+            });
 
         } finally {
             group.shutdownGracefully();
